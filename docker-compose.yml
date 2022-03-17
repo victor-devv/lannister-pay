@@ -1,0 +1,23 @@
+version: '3'
+services:
+  lannister-pay:
+    container_name: lannister-pay
+    restart: always
+    build: .
+    ports:
+      - "3500:3500"
+    links:
+      - lannister-pay-redis
+    volumes:
+      - .:/usr/src/lannister-pay
+    depends_on:
+      - lannister-pay-redis
+  redis:
+    container_name: lannister-pay-redis
+    image: 'redis:4.0.11'
+    ports:
+      - "6379:6379"
+    volumes: 
+      - ./data:/data/cache
+    restart: unless-stopped
+

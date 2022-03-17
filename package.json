@@ -1,0 +1,31 @@
+{
+  "name": "lannister-pay",
+  "version": "1.0.0",
+  "description": "An NGN fee processing service for a fictional Payment Processor (LannisterPay)",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victor-devv/lannister-pay.git"
+  },
+  "keywords": [
+    "Payment"
+  ],
+  "author": "Victor Ikuomola",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/victor-devv/lannister-pay/issues"
+  },
+  "homepage": "https://github.com/victor-devv/lannister-pay#readme",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "redis": "^4.0.3"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.15"
+  }
+}

@@ -1,0 +1,7 @@
+node_modules
+.env
+config/default.ts
+data
+users.txt
+jest.config
+coverage/
