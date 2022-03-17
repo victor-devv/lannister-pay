@@ -18,7 +18,10 @@ async function connectRedis() {
     //{FEE-ID} {FEE-CURRENCY} {FEE-LOCALE} {FEE-ENTITY}({ENTITY-PROPERTY}) : APPLY {FEE-TYPE} {FEE-VALUE}
     // Create an index.
     try {
-        await redisClient.ft.create('idx:fc', {
+
+        // await redisClient.ft.dropIndex('idx:config', 'DD');
+        
+        await redisClient.ft.create('idx:config', {
             '$.feeId': {
                 type: SchemaFieldTypes.TEXT,
                 AS: 'feeId'
@@ -46,10 +49,14 @@ async function connectRedis() {
             '$.feeValue': {
                 type: SchemaFieldTypes.TEXT,
                 AS: 'feeValue'
+            },
+            '$.timestamp': {
+                type: SchemaFieldTypes.TEXT,
+                AS: 'timestamp'
             }
         }, {
             ON: 'JSON',
-            PREFIX: 'noderedis:fc'
+            PREFIX: 'noderedis:config'
         });
     } catch (e) {
         if (e.message === 'Index already exists') {
@@ -61,31 +68,34 @@ async function connectRedis() {
         }
     }
 
-    await redisClient.json.set(`noderedis:fc:1`, '$', {
-        feeId: 'LNPY1221',
-        feeCurrency: 'NGN',
-        feeLocale: '*',
-        feeEntity: '*',
-        entityProperty: '*',
-        feeType: 'PERC',
-        feeValue: '1.4'
-    });
+    // await Promise.all([
+    //     redisClient.json.set('noderedis:config:1', '$', {
+    //         feeId: 'LNPY1221',
+    //         feeCurrency: 'NGN',
+    //         feeLocale: '*',
+    //         feeEntity: '*',
+    //         entityProperty: '*',
+    //         feeType: 'PERC',
+    //         feeValue: '1.4'
+    //     }),
+    // ]);
+    // await redisClient.json.set(`noderedis:config:1`, '$', {
+    //     feeId: 'LNPY1221',
+    //     feeCurrency: 'NGN',
+    //     feeLocale: '*',
+    //     feeEntity: '*',
+    //     entityProperty: '*',
+    //     feeType: 'PERC',
+    //     feeValue: '1.4'
+    // });
 
-    console.log(
-        JSON.stringify(await redisClient.ft.search('idx:fc', '@feeId:{LNPY1221}'), null, 2)
-    );
+    // console.log(
+    //     JSON.stringify(await redisClient.ft.search('idx:config', '@feeCurrency:NGN'), null, 2)
+    // );
 
 } 
 
-async function getAll() {
-    console.log(
-        JSON.stringify(
-            await redisClient.ft.search('idx:fc'), 
-            null, 
-            2
-        )
-    );
-}
+
 connectRedis();
 ///getAll();
 

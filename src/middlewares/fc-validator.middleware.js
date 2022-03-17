@@ -21,7 +21,7 @@ module.exports = {
 
           extractConfigDetails(configuration, res)
             .then(() => {
-
+              //viewInsertedConfig(configuration[0]);
             });
         }
 
@@ -46,6 +46,34 @@ module.exports = {
       );
     }
   },
+
+  validateFeeComputeBody:  function (req, res, next) {
+    const { ID, Amount, Currency, CurrencyCountry, Customer, PaymentEntity } = req.body;
+    
+    if (ID && Amount && Currency && CurrencyCountry && Customer && PaymentEntity) {
+
+      if( Currency != 'NGN' || CurrencyCountry != 'NG') {
+        return res.status(400).json(
+          {
+            "Error": `No fee configuration for ${Currency} transactions.`
+          }
+        );
+      } else {
+        return next();
+      }
+    
+    } else {
+      return res.status(400).json(
+          {
+            "status": "error",
+            "data": {
+                "message": "Required field(s) missing"
+            }
+          }
+      );
+    }
+
+  }
 
 };
 
@@ -85,14 +113,15 @@ const extractConfigDetails = async (config, res) => {
     const id = shortid.generate();
 
     await Promise.all([
-      redisClient.json.set(`noderedis:fc:${id}`, '$', {
+      redisClient.json.set(`noderedis:config:${id}`, '$', {
         feeId: FEE_ID,
         feeCurrency: FEE_CURRENCY,
         feeLocale: FEE_LOCALE,
         feeEntity: FEE_ENTITY,
         entityProperty: ENTITIY_PROPERTY,
         feeType: FEE_TYPE,
-        feeValue: FEE_VALUE
+        feeValue: FEE_VALUE,
+        timestamp: new Date().toLocaleString().replace(',','')
       })
     ]
     );
@@ -152,6 +181,13 @@ const validateDetails = (item, identifier) => {
     default:
       break;
   }
+};
+
+const viewInsertedConfig = async (id) => {
+  console.log(
+    JSON.stringify(await redisClient.ft.search('idx:config', `@feeId:${id}`), null, 2)
+  );
+
 };
 
 const returnBadRequest = (res) => {

@@ -14,7 +14,7 @@ services:
       - lannister-pay-redis
   redis:
     container_name: lannister-pay-redis
-    image: 'redislabs/redisearch:latest'
+    image: 'redislabs/redismod:latest'
     ports:
       - "6379:6379"
     volumes: 
