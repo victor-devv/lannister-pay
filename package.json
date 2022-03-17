@@ -4,6 +4,8 @@
   "description": "An NGN fee processing service for a fictional Payment Processor (LannisterPay)",
   "main": "src/app.js",
   "scripts": {
+    "start": "cross-env NODE_ENV=production node src/app",
+    "dev": "cross-env NODE_ENV=development nodemon src/app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,12 +22,17 @@
   },
   "homepage": "https://github.com/victor-devv/lannister-pay#readme",
   "dependencies": {
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
-    "redis": "^4.0.3"
+    "morgan": "^1.10.0",
+    "redis": "^4.0.3",
+    "response-time": "^2.3.2"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
+    "eslint": "^8.11.0",
     "nodemon": "^2.0.15"
   }
 }
