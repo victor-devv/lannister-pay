@@ -22,13 +22,15 @@
   },
   "homepage": "https://github.com/victor-devv/lannister-pay#readme",
   "dependencies": {
+    "@node-redis/search": "^1.0.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "morgan": "^1.10.0",
     "redis": "^4.0.3",
-    "response-time": "^2.3.2"
+    "response-time": "^2.3.2",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

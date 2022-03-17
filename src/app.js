@@ -15,6 +15,7 @@ app.use(cors());
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(responseTime());
 
 // Logging
 if (process.env.NODE_ENV === "development") {
@@ -24,10 +25,9 @@ if (process.env.NODE_ENV === "development") {
 //Routes
 app.use('/', IndexRoutes);
 
-app.use(responseTime());
 
 //handle 404
-app.use((req, res) => {
+app.use('*', (req, res) => {
   res.status(404).json(
     {
       "status" : "error",
