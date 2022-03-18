@@ -6,8 +6,9 @@ exports.saveConfiguration = async (req, res) => {
 
     const configurations = (FeeConfigurationSpec).split("\n");
 
-    for (let i = 0; i < configurations.length; i++) {
-        let configuration = configurations[i].split(" ");
+    await Promise.all(configurations.map(async (configuration) => {
+        configuration = configuration.split(" ");
+
         configuration.splice(4, 2);
 
         let feeId = configuration[0];
@@ -31,12 +32,11 @@ exports.saveConfiguration = async (req, res) => {
 
         await config.save(feeId, feeCurrency, feeLocale, feeEntity, entityProperty, feeType, feeValue);
 
-        return res.status(200).json({
-            "status": "ok",
-        });
+    }));
 
-    }
-
+    return res.status(200).json({
+        "status": "ok",
+    });
 
 };
 
