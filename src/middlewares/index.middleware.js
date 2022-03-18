@@ -1,6 +1,3 @@
-const redisClient = require('../utils/redis-client');
-const shortid = require('shortid');
-
 let configurationSyntaxErrors = [];
 
 module.exports = {
@@ -19,10 +16,13 @@ module.exports = {
           let configuration = configurations[i].split(" ");
           configuration.splice(4, 2);
 
-          extractConfigDetails(configuration, res)
-            .then(() => {
-              //viewInsertedConfig(configuration[0]);
-            });
+          //extract and validate config spec
+          if(extractConfigDetails(configuration)) {
+            return next();
+          } else {
+            returnBadRequest(res);
+          }
+
         }
 
         if (configurationSyntaxErrors.length == 0) {
@@ -85,7 +85,7 @@ const checkConfigurationSyntax = fc => {
   }
 };
 
-const extractConfigDetails = async (config, res) => {
+const extractConfigDetails = (config) => {
   //{FEE-ID} {FEE-CURRENCY} {FEE-LOCALE} {FEE-ENTITY}({ENTITY-PROPERTY}) : APPLY {FEE-TYPE} {FEE-VALUE}
   const FEE_ID = config[0];
   validateDetails(FEE_ID, 1);
@@ -97,37 +97,22 @@ const extractConfigDetails = async (config, res) => {
   validateDetails(FEE_LOCALE, 3);
 
   let fe = config[3].split("(");
-  let fp = fe[1].split(")");
+  //let fp = fe[1].split(")");
 
   const FEE_ENTITY = fe[0];
   validateDetails(FEE_ENTITY, 4);
 
-  const ENTITIY_PROPERTY = fp[0];
+  //const ENTITIY_PROPERTY = fp[0];
 
   const FEE_TYPE = config[4];
   validateDetails(FEE_TYPE, 5);
 
-  const FEE_VALUE = config[5];
+  //const FEE_VALUE = config[5];
 
   if (configurationSyntaxErrors.length == 0) {
-    const id = shortid.generate();
-
-    await Promise.all([
-      redisClient.json.set(`noderedis:config:${id}`, '$', {
-        feeId: FEE_ID,
-        feeCurrency: FEE_CURRENCY,
-        feeLocale: FEE_LOCALE,
-        feeEntity: FEE_ENTITY,
-        entityProperty: ENTITIY_PROPERTY,
-        feeType: FEE_TYPE,
-        feeValue: FEE_VALUE,
-        timestamp: new Date().toLocaleString().replace(',','')
-      })
-    ]
-    );
-
+    return true;
   } else {
-    returnBadRequest(res);
+    return false;
   }
 
 };
@@ -183,12 +168,12 @@ const validateDetails = (item, identifier) => {
   }
 };
 
-const viewInsertedConfig = async (id) => {
-  console.log(
-    JSON.stringify(await redisClient.ft.search('idx:config', `@feeId:${id}`), null, 2)
-  );
+// const viewInsertedConfig = async (id) => {
+//   console.log(
+//     JSON.stringify(await redisClient.ft.search('idx:config', `@feeId:${id}`), null, 2)
+//   );
 
-};
+// };
 
 const returnBadRequest = (res) => {
   return res.status(400).json(

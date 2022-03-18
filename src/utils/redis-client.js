@@ -21,7 +21,7 @@ async function connectRedis() {
 
         // await redisClient.ft.dropIndex('idx:config', 'DD');
         
-        await redisClient.ft.create('idx:config', {
+        await redisClient.ft.create('idx:configs', {
             '$.feeId': {
                 type: SchemaFieldTypes.TEXT,
                 AS: 'feeId'
@@ -56,7 +56,7 @@ async function connectRedis() {
             }
         }, {
             ON: 'JSON',
-            PREFIX: 'noderedis:config'
+            PREFIX: 'noderedis:configs'
         });
     } catch (e) {
         if (e.message === 'Index already exists') {
@@ -69,12 +69,12 @@ async function connectRedis() {
     }
 
     // await Promise.all([
-    //     redisClient.json.set('noderedis:config:1', '$', {
+    //     redisClient.json.set('noderedis:configs:1', '$', {
     //         feeId: 'LNPY1221',
     //         feeCurrency: 'NGN',
-    //         feeLocale: '*',
-    //         feeEntity: '*',
-    //         entityProperty: '*',
+    //         feeLocale: 'all',
+    //         feeEntity: 'all',
+    //         entityProperty: 'all',
     //         feeType: 'PERC',
     //         feeValue: '1.4'
     //     }),
@@ -90,7 +90,7 @@ async function connectRedis() {
     // });
 
     // console.log(
-    //     JSON.stringify(await redisClient.ft.search('idx:config', '@feeCurrency:NGN'), null, 2)
+    //     JSON.stringify(await redisClient.ft.search('idx:configs', '@feeCurrency:NGN'), null, 2)
     // );
 
 } 
