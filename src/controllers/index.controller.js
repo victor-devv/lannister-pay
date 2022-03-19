@@ -55,7 +55,6 @@ exports.computeTransactionFee = async (req, res) => {
 
     let config = new Config();
     const doc = await config.find(feeLocale, feeEntity, entityProperty);
-    //JSON.stringify(await redisClient.ft.search('idx:config', `@feeId:${id}`), null, 2)
 
     if (doc.total > 0) {
         const appliedFeeId = doc.documents[doc.total - 1].value.feeId;

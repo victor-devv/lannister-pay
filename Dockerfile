@@ -14,4 +14,4 @@ EXPOSE 3500
 
 VOLUME [ "/usr/src/lannister-pay" ]
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
