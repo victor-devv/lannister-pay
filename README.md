@@ -40,6 +40,7 @@ The API is hosted on AWS at
     }
 }
 ```
+API response time is passed as X-Response-Time in the response headers.
 
 ## Stack
 
