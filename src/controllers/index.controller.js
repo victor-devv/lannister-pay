@@ -52,7 +52,7 @@ exports.computeTransactionFee = async (req, res) => {
 
     const feeEntity = PaymentEntity.Type;
     let entityProperty;
-    
+
     entityProperty = PaymentEntity.Brand;
 
     if (entityProperty == '') {
@@ -63,7 +63,6 @@ exports.computeTransactionFee = async (req, res) => {
     const doc = await config.find(feeLocale, feeEntity, entityProperty);
 
     if (doc.total > 0) {
-        console.log(doc.documents[doc.total - 1].value);
         const appliedFeeId = doc.documents[doc.total - 1].value.feeId;
         const appliedFeeType = doc.documents[doc.total - 1].value.feeType;
         let appliedFeeValue;
