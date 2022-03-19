@@ -59,6 +59,7 @@ module.exports = class Config {
     } 
 
     let doc;
+    console.log(entityProperty)
 
     //feeEntity = feeEntity.replace(/[.@]/g, '\\$&');
     doc = await redisClient.ft.search('idx:configs', `@feeLocale:${feeLocale} @feeEntity:${feeEntity} @entityProperty:${entityProperty}`);

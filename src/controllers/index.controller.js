@@ -51,12 +51,19 @@ exports.computeTransactionFee = async (req, res) => {
     }
 
     const feeEntity = PaymentEntity.Type;
-    const entityProperty = PaymentEntity.Brand;
+    let entityProperty;
+    
+    entityProperty = PaymentEntity.Brand;
+
+    if (entityProperty == '') {
+        entityProperty = 'all';
+    }
 
     let config = new Config();
     const doc = await config.find(feeLocale, feeEntity, entityProperty);
 
     if (doc.total > 0) {
+        console.log(doc.documents[doc.total - 1].value);
         const appliedFeeId = doc.documents[doc.total - 1].value.feeId;
         const appliedFeeType = doc.documents[doc.total - 1].value.feeType;
         let appliedFeeValue;
@@ -66,7 +73,7 @@ exports.computeTransactionFee = async (req, res) => {
 
         switch (appliedFeeType) {
             case 'FLAT':
-                appliedFeeValue = doc.documents[doc.total - 1].value.feeValue;
+                appliedFeeValue = parseInt(doc.documents[doc.total - 1].value.feeValue);
                 break;
 
             case 'PERC':
@@ -75,8 +82,9 @@ exports.computeTransactionFee = async (req, res) => {
 
             case 'FLAT_PERC':
                 flatPercArr = doc.documents[doc.total - 1].value.feeValue.split(":");
-                flatAmt = flatPercArr[0];
-                flatPerc = ((flatPercArr[1] * Amount) / 100);
+                flatAmt = parseInt(flatPercArr[0]);
+                
+                flatPerc = (flatPercArr[1] * Amount) / 100;
 
                 appliedFeeValue = flatAmt + flatPerc;
                 break;
